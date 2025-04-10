@@ -1,0 +1,98 @@
+[gd_scene load_steps=18 format=3 uid="uid://bj6228loovjky"]
+
+[ext_resource type="Texture2D" uid="uid://1d7fdyr3fuxt" path="res://tilemaps/Sunnyside_World_ASSET_PACK_V2.1/Sunnyside_World_Assets/Characters/Goblin/PNG/spr_idle_strip9.png" id="1_rjkvr"]
+[ext_resource type="Script" path="res://addons/block_code/block_code_node/block_code.gd" id="2_e7s02"]
+[ext_resource type="Script" path="res://addons/block_code/serialization/block_serialization_tree.gd" id="3_3t8wp"]
+[ext_resource type="Script" path="res://addons/block_code/serialization/block_serialization.gd" id="4_qdagd"]
+[ext_resource type="Script" path="res://addons/block_code/serialization/value_block_serialization.gd" id="5_diwf7"]
+[ext_resource type="Script" path="res://addons/block_code/serialization/block_script_serialization.gd" id="6_vs65c"]
+[ext_resource type="Script" path="res://addons/block_code/code_generation/variable_definition.gd" id="7_afgrj"]
+
+[sub_resource type="Resource" id="Resource_fl5f3"]
+script = ExtResource("4_qdagd")
+name = &"Node2D_set_position"
+children = Array[ExtResource("4_qdagd")]([])
+arguments = {
+"value": Vector2(-50, -50)
+}
+
+[sub_resource type="Resource" id="Resource_37he3"]
+script = ExtResource("4_qdagd")
+name = &"ready"
+children = Array[ExtResource("4_qdagd")]([SubResource("Resource_fl5f3")])
+arguments = {}
+
+[sub_resource type="Resource" id="Resource_maif2"]
+script = ExtResource("3_3t8wp")
+root = SubResource("Resource_37he3")
+canvas_position = Vector2(54, 47)
+
+[sub_resource type="Resource" id="Resource_6wv33"]
+script = ExtResource("5_diwf7")
+name = &"randi_range"
+arguments = {
+"from": -5,
+"to": 5
+}
+
+[sub_resource type="Resource" id="Resource_y68wc"]
+script = ExtResource("5_diwf7")
+name = &"randi_range"
+arguments = {
+"from": -5,
+"to": 5
+}
+
+[sub_resource type="Resource" id="Resource_ble7n"]
+script = ExtResource("5_diwf7")
+name = &"vector2"
+arguments = {
+"x": SubResource("Resource_6wv33"),
+"y": SubResource("Resource_y68wc")
+}
+
+[sub_resource type="Resource" id="Resource_b0q0a"]
+script = ExtResource("4_qdagd")
+name = &"Node2D_change_position"
+children = Array[ExtResource("4_qdagd")]([])
+arguments = {
+"value": SubResource("Resource_ble7n")
+}
+
+[sub_resource type="Resource" id="Resource_bbawl"]
+script = ExtResource("4_qdagd")
+name = &"process"
+children = Array[ExtResource("4_qdagd")]([SubResource("Resource_b0q0a")])
+arguments = {}
+
+[sub_resource type="Resource" id="Resource_4o7sp"]
+script = ExtResource("3_3t8wp")
+root = SubResource("Resource_bbawl")
+canvas_position = Vector2(350, 50)
+
+[sub_resource type="Resource" id="Resource_va3ux"]
+script = ExtResource("6_vs65c")
+script_inherits = "Sprite2D"
+block_serialization_trees = Array[ExtResource("3_3t8wp")]([SubResource("Resource_maif2"), SubResource("Resource_4o7sp")])
+variables = Array[ExtResource("7_afgrj")]([])
+generated_script = "extends Sprite2D
+
+
+func _ready():
+	position = Vector2(-50, -50)
+
+func _process(delta):
+	position += (Vector2((randi_range(-5, 5)), (randi_range(-5, 5))))
+
+"
+version = 0
+
+[node name="Sprite2D" type="Sprite2D"]
+z_index = 3
+z_as_relative = false
+texture = ExtResource("1_rjkvr")
+hframes = 9
+
+[node name="BlockCode" type="Node" parent="."]
+script = ExtResource("2_e7s02")
+block_script = SubResource("Resource_va3ux")
